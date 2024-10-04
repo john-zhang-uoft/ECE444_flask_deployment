@@ -22,6 +22,7 @@ def client():
         db.drop_all()  # teardown
     create_db()
 
+
 def login(client, username, password):
     """Login helper function"""
     return client.post(
@@ -83,3 +84,13 @@ def test_delete_message(client):
     rv = client.get('/delete/1')
     data = json.loads(rv.data)
     assert data["status"] == 1
+
+
+# def test_search(client):
+#     """Ensure that search functionality works"""
+#     rv = client.get('/search/?query=Hello')
+#     assert b"&lt;Hello&gt;" in rv.data
+#     assert b"<strong>HTML</strong> allowed here" in rv.data
+#     rv = client.get('/search/?query=World')
+#     assert b"No entries found" in rv.data
+
