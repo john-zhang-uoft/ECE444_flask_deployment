@@ -89,4 +89,34 @@ def test_delete_message(client):
     assert data["status"] == 1
 
 
-def test_search
+def test_search(client):
+    """Ensure that search returns correct results"""
+    # Explaination for this test:
+    # The search function is supposed to return all entries if the query is empty.
+    # This test checks if the search function returns all entries when the query is empty.
+    login(client, app.config["USERNAME"], app.config["PASSWORD"])
+    client.post(
+        "/add",
+        data=dict(title="hahaha", text="hahaha"),
+        follow_redirects=True,
+    )
+
+    client.post(
+        "/add",
+        data=dict(title="hehehe", text="hehehe"),
+        follow_redirects=True,
+    )
+
+    rv = client.get("/search/?query=hahaha")
+    assert "hahaha" in str(rv.data)
+
+    rv = client.get("/search/?query=hehehe")
+    assert "hehehe" in str(rv.data)
+
+
+def test_login_required(client):
+    # Test that delete requires user to be logged in
+    rv = client.get("/delete/1")
+    assert rv.status_code == 401
+    rv = client.post("/add")
+    assert rv.status_code == 401
